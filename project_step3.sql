@@ -53,10 +53,11 @@ CREATE TABLE pastry_case (
 
 
 CREATE TABLE inventory (
-	location VARCHAR(255) NOT NULL PRIMARY KEY,
+	location VARCHAR(255) NOT NULL,
 	ingredient INT,
 	amount INT,
-	FOREIGN KEY (ingredient) REFERENCES ingredient(ingredient_id)
+	FOREIGN KEY (ingredient) REFERENCES ingredient(ingredient_id),
+	PRIMARY KEY (location, ingredient)
 );
 
 CREATE TABLE shipment (
@@ -89,14 +90,33 @@ CREATE TABLE ships(
 
 INSERT INTO ingredient ( ingredient_name, ingredient_type, amount_type)
 VALUES ('Chip, Chocolate', 'Dry', 'lb'),
-('Flour, Hi-Gluten', 'Dry', 'lb')
+('Flour, Hi-Gluten', 'Dry', 'lb'),
 ('Egg product', 'Wet', 'lb'),
 ('Sugar, Cane', 'Dry', 'lb'),
-('Flour, Lo-Gluten', 'Dry', 'lb')
+('Flour, Lo-Gluten', 'Dry', 'lb'),
+('Flour, Pastry', 'Dry', 'lb'),
+('Sugar, Brown', 'Dry', 'lb'),
+('Sugar, Confectioners', 'Dry', 'lb'),
+('Eggs, Large', 'Wet', 'Qty'),
+('Butter, Block', 'Chilled', 'lb'),
+('Butter, 1 Lb.', 'Chilled', 'lb'),
+('Vanilla, Extract', 'Wet', 'Oz'),
+('Vanilla, Bean', 'Dry', 'Qty')
 ;
 
 INSERT INTO recipe (recipe_name, quantity, recipe_type)
-VALUES ('Test Cookie', 20, 'Cookie');
+VALUES ('Test Cookie', 200, 'Cookie'),
+('Test Muffin', 200, 'Muffin'),
+('Test Cake', 10, 'Cake'),
+('Chocolate Chip', 200, 'Cookie'),
+('Ginger Molasses', 200, 'Cookie'),
+('Peanut Butter', 200, 'Cookie'),
+('Oatmeal Raisin', 200, 'Cookie'),
+('Chocolate Cake', 15, 'Cake'),
+('White Cake', 15, 'Cake'),
+('Donut Muffin', 200, 'Muffin'),
+('Cranberry Shortcake', 20, 'Shortcake')
+;
 
 INSERT INTO Ingredient_list ( rid, iid, amount_needed)
 VALUES
@@ -111,4 +131,51 @@ VALUES
 (
 	( SELECT recipe_id FROM recipe WHERE recipe_name = 'Test Cookie'),
 	( SELECT ingredient_id FROM ingredient WHERE ingredient_name = 'Sugar, Cane'),20
+),
+(
+	( SELECT recipe_id FROM recipe WHERE recipe_name = 'Test Cookie'),
+	( SELECT ingredient_id FROM ingredient WHERE ingredient_name = 'Sugar, Brown'),20
+),
+(
+	( SELECT recipe_id FROM recipe WHERE recipe_name = 'Test Cookie'),
+	( SELECT ingredient_id FROM ingredient WHERE ingredient_name = 'Butter, Block'),15
+),
+(
+	( SELECT recipe_id FROM recipe WHERE recipe_name = 'Test Cookie'),
+	( SELECT ingredient_id FROM ingredient WHERE ingredient_name = 'Vanilla, Extract'),2
 );
+
+--Use the following to grab ingredient from a location --
+/*SELECT ingredient.ingredient_name FROM ingredient, inventory WHERE ingredient.ingredient_id = inventory.ingredient AND inventory.location = 'Bakery';*/
+
+INSERT INTO inventory (location, ingredient, amount)
+VALUES
+('Bakery', 1, 200),
+('Bakery', 2, 200),
+('Bakery', 3, 200),
+('Bakery', 4, 200),
+('Bakery', 5, 200),
+('Bakery', 6, 200),
+('Bakery', 7, 200),
+('Bakery', 8, 200),
+('Bakery', 9, 200),
+('Bakery', 10, 200),
+('Bakery', 11, 200),
+('Bakery', 12, 200),
+('Bakery', 13, 200),
+('Meat Avenue', 1, 200),
+('Butter Avenue', 10, 2000 ),
+('Butter Avenue', 11, 2000),
+('Sweetooth lane', 4, 2000),
+('Sweetooth lane', 7, 2000)
+;
+
+INSERT INTO shift_lead (shift_name, shift_password, start_date)
+VALUES ('Mark', 'Mark_R0X', '2020-02-02'),
+('Sharol', '1234', '2020-02-02')
+;
+
+INSERT INTO vendor (vendor_name, location)
+VALUES ('MEAT AND STUFF', 'Meat Avenue'),
+('Butter and things', 'Butter Avenue'),
+('Sweet Stuff', 'Sweetooth lane');
