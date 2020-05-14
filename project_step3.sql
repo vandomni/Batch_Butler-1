@@ -101,7 +101,9 @@ VALUES ('Chip, Chocolate', 'Dry', 'lb'),
 ('Butter, Block', 'Chilled', 'lb'),
 ('Butter, 1 Lb.', 'Chilled', 'lb'),
 ('Vanilla, Extract', 'Wet', 'Oz'),
-('Vanilla, Bean', 'Dry', 'Qty')
+('Vanilla, Bean', 'Dry', 'Qty'),
+('Milk, Whole', 'Chilled', 'Oz'),
+('Coffee, Bean', 'Dry', 'lb')
 ;
 
 INSERT INTO recipe (recipe_name, quantity, recipe_type)
@@ -120,6 +122,10 @@ VALUES ('Test Cookie', 200, 'Cookie'),
 
 INSERT INTO Ingredient_list ( rid, iid, amount_needed)
 VALUES
+/*
+Insert test cookie with recpie 'Test Cookie'
+Ingredients chocolate chip, egg product, sugar(cane and brown), butter, vanilla extract
+*/
 (
 	( SELECT recipe_id FROM recipe WHERE recipe_name = 'Test Cookie'),
 	( SELECT ingredient_id FROM ingredient WHERE ingredient_name = 'Chip, Chocolate'),20
@@ -143,10 +149,62 @@ VALUES
 (
 	( SELECT recipe_id FROM recipe WHERE recipe_name = 'Test Cookie'),
 	( SELECT ingredient_id FROM ingredient WHERE ingredient_name = 'Vanilla, Extract'),2
+),
+/*
+insert test muffin with recipe 'Test Muffin'
+ingredients sugar, milk, butter, flour high gluten, vanilla extract
+*/
+(
+	( SELECT recipe_id FROM recipe WHERE recipe_name = 'Test Muffin'),
+	( SELECT ingredient_id FROM ingredient WHERE ingredient_name = 'Sugar, Cane'),10
+),
+(
+	( SELECT recipe_id FROM recipe WHERE recipe_name = 'Test Muffin'),
+	( SELECT ingredient_id FROM ingredient WHERE ingredient_name = 'Milk, Whole'),15
+),
+(
+	( SELECT recipe_id FROM recipe WHERE recipe_name = 'Test Muffin'),
+	( SELECT ingredient_id FROM ingredient WHERE ingredient_name = 'Butter, Block'),10
+),
+(
+	( SELECT recipe_id FROM recipe WHERE recipe_name = 'Test Muffin'),
+	( SELECT ingredient_id FROM ingredient WHERE ingredient_name = 'Flour, Hi-Gluten'),25
+),
+(
+	( SELECT recipe_id FROM recipe WHERE recipe_name = 'Test Muffin'),
+	( SELECT ingredient_id FROM ingredient WHERE ingredient_name = 'Vanilla, Extract'),1
+),
+/*
+insert test cake with recipe 'Test Cake'
+ingredients 'flour pastry' sugar, milk, chocolate chips, egg product, coffee,
+*/
+(
+	( SELECT recipe_id FROM recipe WHERE recipe_name = 'Test Cake'),
+	( SELECT ingredient_id FROM ingredient WHERE ingredient_name = 'Flour, Pastry'), 20
+),
+(
+	( SELECT recipe_id FROM recipe WHERE recipe_name = 'Test Cake'),
+	( SELECT ingredient_id FROM ingredient WHERE ingredient_name = 'Sugar, Cane'), 10
+),
+(
+	( SELECT recipe_id FROM recipe WHERE recipe_name = 'Test Cake'),
+	( SELECT ingredient_id FROM ingredient WHERE ingredient_name = 'Milk, Whole'), 20
+),
+(
+	( SELECT recipe_id FROM recipe WHERE recipe_name = 'Test Cake'),
+	( SELECT ingredient_id FROM ingredient WHERE ingredient_name = 'Chip, Chocolate'), 15
+),
+(
+	( SELECT recipe_id FROM recipe WHERE recipe_name = 'Test Cake'),
+	( SELECT ingredient_id FROM ingredient WHERE ingredient_name = 'Egg product'), 10
+),
+(
+	( SELECT recipe_id FROM recipe WHERE recipe_name = 'Test Cake'),
+	( SELECT ingredient_id FROM ingredient WHERE ingredient_name = 'Coffee, Bean'), 10
 );
 
---Use the following to grab ingredient from a location --
-/*SELECT ingredient.ingredient_name FROM ingredient, inventory WHERE ingredient.ingredient_id = inventory.ingredient AND inventory.location = 'Bakery';*/
+
+
 
 INSERT INTO inventory (location, ingredient, amount)
 VALUES
@@ -163,7 +221,8 @@ VALUES
 ('Bakery', 11, 200),
 ('Bakery', 12, 200),
 ('Bakery', 13, 200),
-('Meat Avenue', 1, 200),
+('Bakery', 14, 200),
+('Meat Avenue', 3, 2000),
 ('Butter Avenue', 10, 2000 ),
 ('Butter Avenue', 11, 2000),
 ('Sweetooth lane', 4, 2000),
@@ -179,3 +238,143 @@ INSERT INTO vendor (vendor_name, location)
 VALUES ('MEAT AND STUFF', 'Meat Avenue'),
 ('Butter and things', 'Butter Avenue'),
 ('Sweet Stuff', 'Sweetooth lane');
+
+INSERT INTO shipment (ship_date)
+VALUES ('2020-01-01'),
+('2020-01-15'),
+('2020-01-15');
+
+INSERT INTO shipment_contents (shid, ingredient, amount)
+VALUES ((SELECT shipment_id FROM shipment WHERE shipment_id = 1),(SELECT ingredient_id FROM ingredient WHERE ingredient_name = 'Egg product'), 200),
+((SELECT shipment_id FROM shipment WHERE shipment_id = 2),(SELECT ingredient_id FROM ingredient WHERE ingredient_name = 'Butter, Block'), 200),
+((SELECT shipment_id FROM shipment WHERE shipment_id = 3),(SELECT ingredient_id FROM ingredient WHERE ingredient_name = 'Sugar, Cane'), 200);
+
+INSERT INTO ships (vid, shid)
+VALUES ((SELECT vendor_id FROM vendor WHERE vendor_name = 'MEAT AND STUFF'),(SELECT shipment_id FROM shipment WHERE shipment_id = 1)),
+((SELECT vendor_id FROM vendor WHERE vendor_name = 'Butter and things'),(SELECT shipment_id FROM shipment WHERE shipment_id = 2)),
+((SELECT vendor_id FROM vendor WHERE vendor_name = 'Sweet Stuff'),(SELECT shipment_id FROM shipment WHERE shipment_id = 3));
+
+INSERT INTO pastry_case (daily_pastry_case, rid, sid, amount)
+VALUES ('2020-05-12', (SELECT recipe_id FROM recipe WHERE recipe_name = 'Chocolate Chip'), (SELECT shift_id FROM shift_lead WHERE shift_name = 'Mark'), 50),
+('2020-05-13', (SELECT recipe_id FROM recipe WHERE recipe_name = 'White Cake'), (SELECT shift_id FROM shift_lead WHERE shift_name = 'Sharol'), 10);
+
+--MISSING insert statements produces--
+
+--Querys for data below --
+
+
+--Use the following to grab ingredient from a location --
+
+--Bakery inventory--
+SELECT ingredient.ingredient_name, inventory.amount FROM ingredient, inventory WHERE ingredient.ingredient_id = inventory.ingredient AND inventory.location = 'Bakery';
+
+--MEAT AND STUFF inventory--
+SELECT ingredient.ingredient_name, inventory.amount  FROM ingredient, inventory WHERE ingredient.ingredient_id = inventory.ingredient AND inventory.location = 'Meat Avenue';
+
+--Butter and things inventory--
+SELECT ingredient.ingredient_name, inventory.amount FROM ingredient, inventory WHERE ingredient.ingredient_id = inventory.ingredient AND inventory.location = 'Butter Avenue';
+
+--Sweet Stuff inventory--
+SELECT ingredient.ingredient_name, inventory.amount FROM ingredient, inventory WHERE ingredient.ingredient_id = inventory.ingredient AND inventory.location = 'Sweetooth lane';
+
+--Selecting the ingredients involved in a recipe--
+
+--Test cookie recipe list --
+SELECT recipe.recipe_name, ingredient.ingredient_name, Ingredient_list.amount_needed FROM recipe, ingredient, Ingredient_list WHERE ingredient.ingredient_id = Ingredient_list.iid AND Ingredient_list.rid = recipe.recipe_id AND recipe.recipe_name = 'Test Cookie';
+
+--Test Muffin recipe list --
+SELECT recipe.recipe_name, ingredient.ingredient_name, Ingredient_list.amount_needed FROM recipe, ingredient, Ingredient_list WHERE ingredient.ingredient_id = Ingredient_list.iid AND Ingredient_list.rid = recipe.recipe_id AND recipe.recipe_name = 'Test Muffin';
+
+--Test Muffin recipe list --
+SELECT recipe.recipe_name, ingredient.ingredient_name, Ingredient_list.amount_needed FROM recipe, ingredient, Ingredient_list WHERE ingredient.ingredient_id = Ingredient_list.iid AND Ingredient_list.rid = recipe.recipe_id AND recipe.recipe_name = 'Test Cake';
+
+--UPDATE queries for changing inventory amounts after creating a recipe --
+
+/*UPDATE inventory SET amount =
+(SELECT inventory.amount
+FROM inventory, ingredient
+WHERE ingredient.ingredient_id = inventory.ingredient
+MINUS
+SELECT Ingredient_list.amount_needed
+FROM Ingredient_list
+WHERE Ingredient_list.iid = inventory.ingredient AND Ingredient_list.rid = 1; );*/
+
+
+--Triggers for the bakery inventory --
+
+--Trigger to delete the contents of a shipment once they have been delivered--
+
+DELIMITER //
+
+CREATE TRIGGER delete_shipment
+BEFORE DELETE ON shipment_contents FOR EACH ROW
+BEGIN
+	DELETE FROM shipment_contents WHERE OLD.shipment_contents.shipment_id = shipment_contents.shipment_id;
+END
+//
+
+DELIMITER ;
+
+/******************************************************************************
+
+--Views for looking at Batch Butler --
+--Still need to add pastry case, shipment contents, shipments, vendors, ingredients.
+
+******************************************************************************/
+
+--Accessing the recipes available at the bakery--
+--Use command "SELECT * FROM Bakery_recipes;"
+CREATE VIEW Bakery_recipes AS
+SELECT recipe_id, recipe_name
+FROM recipe
+ORDER BY recipe_name;
+
+
+
+--Accessing the inventory available at the bakery--
+--Use command "SELECT * FROM Bakery_inventory;"
+CREATE VIEW Bakery_inventory AS
+SELECT ingredient.ingredient_name, inventory.amount
+FROM ingredient, inventory
+WHERE ingredient.ingredient_id = inventory.ingredient AND inventory.location = 'Bakery'
+ORDER BY ingredient.ingredient_name;
+
+--Accessing the inventory available at the MEAT and STUFF --
+--Use command "SELECT * FROM Meat_Avenue_inventory"
+CREATE VIEW Meat_Avenue_inventory AS
+SELECT ingredient.ingredient_name, inventory.amount
+FROM ingredient, inventory
+WHERE ingredient.ingredient_id = inventory.ingredient AND inventory.location = 'Meat Avenue'
+ORDER BY ingredient.ingredient_name;
+
+--Accessing the inventory available at the Sweetooth --
+--Use command "SELECT * FROM Sweetooth_inventory"
+CREATE VIEW Sweetooth_inventory AS
+SELECT ingredient.ingredient_name, inventory.amount
+FROM ingredient, inventory
+WHERE ingredient.ingredient_id = inventory.ingredient AND inventory.location = 'Sweetooth lane'
+ORDER BY ingredient.ingredient_name;
+
+--Accessing the inventory available at the Sweetooth --
+--Use command "SELECT * FROM Butter_and_things_inventory"
+CREATE VIEW Butter_and_things_inventory AS
+SELECT ingredient.ingredient_name, inventory.amount
+FROM ingredient, inventory
+WHERE ingredient.ingredient_id = inventory.ingredient AND inventory.location = 'Butter Avenue'
+ORDER BY ingredient.ingredient_name;
+
+
+/*
+SELECT recipe.recipe_name FROM recipe, produces WHERE recipe.recipe_id = produces.rid AND produces.made_on = todays date
+
+SELECT shipment.shipment_id FROM shipment WHERE ship_date = todays date
+
+SELECT shipment.shipment_id FROM shipment WHERE ship_date = yesterdays date
+
+SELECT recipe.recipe_name FROM recipe
+
+GROUP BY ingredient_type;
+
+DELETE FROM production WHERE rid = '$deletedID'
+
+*/
