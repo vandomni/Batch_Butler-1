@@ -1,0 +1,44 @@
+<html>
+<form id='search_ingredients' action='' method=''>
+	<label> Search ingredients by name starting with:</label>
+	<input id='ingredient_name_string' type='text' name='ingredient_name_string' value=''>
+	<input type="button" value="Search" onclick="searchIngredientsByName()">
+</form>
+
+<h3>Ingredients in the database</h3>
+<table>
+    <thead> 
+        <th>ingredient name</th> 
+        <th>ingredient type</th>
+		<th>Amount type</th>
+    </thead> 
+    <tbody>
+        {{#each ingredients}} 
+        <tr> 
+            <td>{{ingredient_name}}</td> 
+            <td>{{ingredient_type}}</td>
+			<td>{{amount_type}}</td>
+			<td><button onclick="deleteIngredient({{id}})">Delete</button></td>
+			<td><a href="/ingredients/{{id}}">Update</a></td>
+        </tr>
+		{{/each}}
+    </tbody> 
+</table>
+<br>
+<h3> Add a new ingredient to the database</h3>
+<form id="addingredient" action="/ingredients" method="post">
+	ingredient name: <input type="text" name="ingredient_name"><br>
+	Ingredient Type: <select name="ingredient_type" value="{{ingredient.ingredient_type}}" id="ingredient_type_selector">
+		<option value = "Dry"> Dry</option>
+		<option value = "Wet"> Wet</option>
+		<option value = "Frozen"> Frozen</option>
+		<option value = "Chilled"> Chilled</option>
+		</select><br>
+	Amount Type: <select name="amount_type" value="{{ingredient.amount_type}}" id="amount_type_selector">
+		<option value = "lb.">lb.</option>
+		<option value = "Oz.">Oz.</option>
+		<option value = "Qty">Qty</option>
+		</select><br>
+	<input type="submit" value="submit">
+</form>
+</html>

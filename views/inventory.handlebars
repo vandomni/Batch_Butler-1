@@ -1,0 +1,37 @@
+<html>
+
+<h3> "Order" ingredients for your inventory </h3>
+<form id="addtoinventory" action="/inventory" method="post">
+	Inventory:<select name="location" value="{{inventory.location}}" id="location">
+	<option value = "Bakery"> Bakery </option>
+	</select><br>
+	ingredient:<select name="ingredient">
+	{{#each ingredient}}
+	<option value="{{id}}">{{ingredient_name}}</option>
+	{{/each}}
+	</select><br>
+	Amount: <input type = "number" name ="amount"><br>
+	<input type="submit" value="Order">
+</form>
+<br/>
+<h3>Current Inventory</h3>
+<table>
+    <thead> 
+        <th>ingredient name</th> 
+        <th>amount</th>
+		<th>Amount type</th>
+    </thead> 
+    <tbody>
+        {{#each inventory}} 
+        <tr> 
+            <td>{{ingredient_name}}</td> 
+            <td>{{amount}}</td>
+			<td>{{type}}</td>
+			<td><button onclick="deleteInventory({{ingredient}})">Delete</button></td>
+        </tr>
+		{{/each}}
+    </tbody> 
+</table> 
+
+
+</html>

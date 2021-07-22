@@ -1,0 +1,19 @@
+<html>
+<h3>Vendors</h3>
+<table>
+	<thread>
+		<th>Vendor Name</th>
+		<th>Vendor Location</th>
+	</thread>
+	<tbody>
+		{{#each vendor_inventory}}
+			<tr>
+				<td>{{vendor_name}}</td>
+				<td>{{location}}</td>
+				<td><a href="/vendor_inventory/{{id}}"> View Inventory</a></td>
+			</tr>
+		{{/each}}
+	</tbody>
+</table>
+
+</html>

@@ -1,0 +1,18 @@
+<html>
+<h1>Update {{ingredient.ingredient_name}}:</h1>
+<form id="update-ingredient" action="/ingredients" method="post">
+	Ingredient Name: <input type="text" name="ingredient_name" value="{{ingredient.ingredient_name}}"><br>
+	Ingredient Type: <select name="ingredient_type" value="{{ingredient.ingredient_type}}" id="ingredient_type_selector">
+		<option value = "Dry"> Dry</option>
+		<option value = "Wet"> Wet</option>
+		<option value = "Frozen"> Frozen</option>
+		<option value = "Chilled"> Chilled</option>
+		</select><br>
+	Amount Type: <select name="amount_type" value="{{ingredient.amount_type}}" id="amount_type_selector">
+		<option value = "lb.">lb.</option>
+		<option value = "Oz.">Oz.</option>
+		<option value = "Qty">Qty</option>
+		</select><br>
+</form>
+<button onclick="updateIngredient({{ingredient.id}})">Update</button>
+</html>

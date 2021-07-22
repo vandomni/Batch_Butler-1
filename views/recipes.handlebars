@@ -1,0 +1,19 @@
+<html>
+<h3>Recipes in the database</h3>
+<table>
+    <thead> 
+        <th>Recipe name</th>
+		<th>Makes</th>
+		<th>Recipe type</th>
+    </thead> 
+    <tbody>
+        {{#each recipes}} 
+        <tr> 
+            <td>{{recipe_name}}</td>
+			<td>{{quantity}}</td>
+			<td>{{recipe_type}}</td>
+        </tr>
+		{{/each}}
+    </tbody> 
+</table> 
+</html>

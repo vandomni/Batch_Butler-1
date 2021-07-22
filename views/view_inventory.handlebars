@@ -1,0 +1,19 @@
+ <html>
+ <h1> Viewing {{vendor.vendor_name}} inventory: </h1>
+<table>
+    <thead> 
+        <th>ingredient name</th> 
+        <th>ingredient type</th>
+		<th>Amount type</th>
+    </thead> 
+    <tbody>
+        {{#each inventory}} 
+        <tr> 
+            <td>{{ingredient_name}}</td> 
+            <td>{{ingredient_type}}</td>
+			<td>{{amount_type}}</td>
+        </tr>
+		{{/each}}
+    </tbody> 
+</table>
+</html> 
