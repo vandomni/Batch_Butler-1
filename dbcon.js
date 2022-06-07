@@ -7,3 +7,5 @@ var pool = mysql.createPool({
   database        : 'cs340_vandomni'
 });
 module.exports.pool = pool;
+
+var test = NULL;
